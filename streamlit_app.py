@@ -3,6 +3,14 @@ import streamlit as st
 import sqlite3
 import streamlit as st
 import pandas as pd
+import subprocess
+
+def install(package):
+    subprocess.check_call(["pip", "install", package])
+
+# Install openpyxl
+install("openpyxl")
+
 
 conn = sqlite3.connect('example.db')
 c = conn.cursor()
