@@ -4,6 +4,7 @@ import sqlite3
 import streamlit as st
 import pandas as pd
 import subprocess
+from datetime import datetime
 
 def install(package):
     subprocess.check_call(["pip", "install", package])
@@ -71,18 +72,19 @@ def main():
     
         # Add "Export to Excel" button
         if st.button("Export to Excel"):
-        # Use pandas to write table to Excel file
+            # Use pandas to write table to Excel file
             result.to_excel("books.xlsx", index=False)
             st.success("Table exported to Excel file 'books.xlsx'")
-
+    
             # Generate download link for Excel file
             with open("books.xlsx", "rb") as f:
                 file = f.read()
                 b64 = base64.b64encode(file).decode()
-                href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="books.xlsx">Download Excel file</a>'
+                now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                filename = f"books_{now}.xlsx"
+                href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="{filename}">Download Excel file</a>'
                 st.markdown(href, unsafe_allow_html=True)
 
-    
     elif choice == "Update Book":
         st.subheader("Update Book")
         result = view_data()
@@ -111,3 +113,11 @@ def main():
 if __name__ == '__main__':
     main()
 
+# hide streamlit menu and footer
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
