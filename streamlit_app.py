@@ -59,6 +59,18 @@ def main():
         st.subheader("View Books")
         result = view_data()
         st.write(result)
+
+    elif choice == "View Books":
+        st.subheader("View Books")
+        result = view_data()
+        st.write(result)
+    
+        # Add "Export to Excel" button
+        if st.button("Export to Excel"):
+        # Use pandas to write table to Excel file
+            result.to_excel("books.xlsx", index=False)
+            st.success("Table exported to Excel file 'books.xlsx'")
+
     
     elif choice == "Update Book":
         st.subheader("Update Book")
