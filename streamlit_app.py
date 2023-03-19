@@ -1,5 +1,7 @@
 import streamlit as st
 import sqlite3
+import streamlit as st
+import pandas as pd
 
 conn = sqlite3.connect('example.db')
 c = conn.cursor()
@@ -12,3 +14,63 @@ c.execute('''CREATE TABLE IF NOT EXISTS books
 
 conn.commit()
 conn.close()
+
+# connect to database
+conn = sqlite3.connect('example.db')
+c = conn.cursor()
+
+# create function to add data
+def add_data(title, author, year):
+    c.execute("INSERT INTO books (title, author, year) VALUES (?, ?, ?)", (title, author, year))
+    conn.commit()
+
+# create function to view data
+def view_data():
+    result = pd.read_sql("SELECT * FROM books", conn)
+    return result
+
+# create function to update data
+def update_data(title, author, year, id):
+    c.execute("UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?", (title, author, year, id))
+    conn.commit()
+
+# create function to delete data
+def delete_data(id):
+    c.execute("DELETE FROM books WHERE id = ?", (id,))
+    conn.commit()
+
+# create Streamlit app
+def main():
+    st.title("Book Manager")
+    
+    menu = ["Add Book", "View Books", "Update Book", "Delete Book"]
+    choice = st.sidebar.selectbox("Select an option", menu)
+    
+    if choice == "Add Book":
+        st.subheader("Add New Book")
+        title = st.text_input("Title")
+        author = st.text_input("Author")
+        year = st.number_input("Year Published")
+        if st.button("Add Book"):
+            add_data(title, author, year)
+            st.success("Book Added: {} by {} (Published {})".format(title, author, year))
+    
+    elif choice == "View Books":
+        st.subheader("View Books")
+        result = view_data()
+        st.write(result)
+    
+    elif choice == "Update Book":
+        st.subheader("Update Book")
+        result = view_data()
+        booklist = result['title'].tolist()
+        booktitle = st.selectbox("Select a book", booklist)
+        bookdata = result[result['title'] == booktitle]
+        newtitle = st.text_input("Title", bookdata['title'].iloc[0])
+        newauthor = st.text_input("Author", bookdata['author'].iloc[0])
+        newyear = st.number_input("Year Published", bookdata['year'].iloc[0])
+        if st.button("Update", key="update"):
+            id = bookdata['id'].iloc[0]
+            update_data(newtitle, newauthor, newyear, id)
+            st.success("Book Deleted: {}".format(booktitle))
+
