@@ -59,11 +59,6 @@ def main():
         st.subheader("View Books")
         result = view_data()
         st.write(result)
-
-    elif choice == "View Books":
-        st.subheader("View Books")
-        result = view_data()
-        st.write(result)
     
         # Add "Export to Excel" button
         if st.button("Export to Excel"):
