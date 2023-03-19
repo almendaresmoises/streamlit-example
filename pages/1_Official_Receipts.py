@@ -43,8 +43,8 @@ def delete_data(id):
 
 # create Streamlit app
 def main():
-    st.title("Book Manager")
-    
+    st.title("Official Receipts")
+
     menu = ["Add Book", "View Books", "Update Book", "Delete Book"]
     choice = st.sidebar.selectbox("Select an option", menu)
     
