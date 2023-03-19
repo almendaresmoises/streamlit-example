@@ -72,5 +72,19 @@ def main():
         if st.button("Update", key="update"):
             id = bookdata['id'].iloc[0]
             update_data(newtitle, newauthor, newyear, id)
+            st.success("Book Updated!")
+    
+    elif choice == "Delete Book":
+        st.subheader("Delete Book")
+        result = view_data()
+        booklist = result['title'].tolist()
+        booktitle = st.selectbox("Select a book", booklist)
+        bookdata = result[result['title'] == booktitle]
+        if st.button("Delete"):
+            id = bookdata['id'].iloc[0]
+            delete_data(id)
             st.success("Book Deleted: {}".format(booktitle))
+    
+if __name__ == '__main__':
+    main()
 
