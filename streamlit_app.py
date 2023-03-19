@@ -1,3 +1,4 @@
+import base64
 import streamlit as st
 import sqlite3
 import streamlit as st
@@ -65,6 +66,13 @@ def main():
         # Use pandas to write table to Excel file
             result.to_excel("books.xlsx", index=False)
             st.success("Table exported to Excel file 'books.xlsx'")
+
+            # Generate download link for Excel file
+            with open("books.xlsx", "rb") as f:
+                file = f.read()
+                b64 = base64.b64encode(file).decode()
+                href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="books.xlsx">Download Excel file</a>'
+                st.markdown(href, unsafe_allow_html=True)
 
     
     elif choice == "Update Book":
