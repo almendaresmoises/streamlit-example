@@ -38,8 +38,15 @@ def update_data(title, author, year, id):
 
 # create function to delete data
 def delete_data(id):
-    c.execute("DELETE FROM books WHERE id = ?", (id,))
-    conn.commit()
+    print(f"Deleting book with id={id}")
+    try:
+        # Delete book from the database
+        c.execute(f"DELETE FROM books WHERE id={id}")
+        conn.commit()
+        st.success("Book deleted successfully!")
+    except Exception as e:
+        st.error(f"Error deleting book: {e}")
+        print(f"Deleted book with id={id}")
 
 # create Streamlit app
 def main():
@@ -100,7 +107,6 @@ def main():
         if st.button("Delete"):
             id = bookdata['id'].iloc[0]
             delete_data(id)
-            st.success("Book Deleted: {}".format(booktitle))
     
 if __name__ == '__main__':
     main()
